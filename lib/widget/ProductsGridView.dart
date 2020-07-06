@@ -4,19 +4,31 @@ import 'package:orgeneral/screen/ProductPage.dart';
 
 class ProductsGridView extends StatelessWidget {
   final List<Map<String, dynamic>> dapList; // dap -> Dealer And Product
-  
-  ProductsGridView(this.dapList);
+
+  ProductsGridView(this.dapList) : assert(dapList != null);
   var _context;
 
   @override
   Widget build(BuildContext context) {
     _context = context;
-    return GridView.count(
-      padding: EdgeInsets.all(4.0),
-      crossAxisCount: 2,
-      childAspectRatio: (8 / 9),
-      children: List.generate(dapList.length, (index) => gridItem(dapList[index])),
-    );
+    return buildGridView();
+  }
+
+  Widget buildGridView() {
+    Widget resultWidget;
+    if (dapList.length > 0) {
+      resultWidget = GridView.count(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        padding: EdgeInsets.all(4.0),
+        crossAxisCount: 2,
+        childAspectRatio: (8 / 9),
+        children: List.generate(dapList.length, (index) => gridItem(dapList[index])),
+      );
+    } else {
+      resultWidget = Text('dapList.length > 0: ${dapList.length > 0}');
+    }
+    return resultWidget;
   }
 
   Widget gridItem(Map<String, dynamic> dap) {
