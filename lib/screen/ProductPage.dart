@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:orgeneral/data/comment_service.dart';
 import 'package:orgeneral/data/dealer_service.dart';
 import 'package:orgeneral/data/product_service.dart';
+import 'package:orgeneral/model/Comment.dart';
 import 'package:orgeneral/model/Product.dart';
 import 'package:orgeneral/model/Dealer.dart';
 import 'package:orgeneral/screen/DealerPage.dart';
+import 'package:orgeneral/widget/CommentsListView.dart';
 
 class ProductPage extends StatefulWidget {
   final String dealerUid;
@@ -43,11 +45,19 @@ class _ProductPageState extends State<ProductPage> {
   Dealer dealer = Dealer.empty();
   Product product = Product.empty();
 
+  List<Comment> comments = List();
+
   Future<void> asyncInitState() async {
     await DealerService.getWithUid(widget.dealerUid).then((_dealer) => dealer = _dealer);
     await ProductService.getWithUid(widget.dealerUid, widget.productUid).then((_product) {
       setState(() {
         product = _product;
+      });
+    });
+    await CommentService.getInProduct(dealerUid: widget.dealerUid, productUid: product.uid)
+        .then((_comments) {
+      setState(() {
+        comments = _comments;
       });
     });
   }
@@ -60,6 +70,7 @@ class _ProductPageState extends State<ProductPage> {
         children: <Widget>[
           buildProductImage(),
           buildProductDetails(),
+          buildProductComments(),
         ],
       ),
     );
@@ -82,6 +93,15 @@ class _ProductPageState extends State<ProductPage> {
         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => Icon(Icons.error),
       ),
+    );
+  }
+
+  Widget buildProductComments() {
+    return Column(
+      children: <Widget>[
+        Text('yorumlar'),
+        CommentListView(comments: comments),
+      ],
     );
   }
 

@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:orgeneral/data/comment_service.dart';
 import 'package:orgeneral/data/product_service.dart';
+import 'package:orgeneral/model/Comment.dart';
 import 'package:orgeneral/model/Dealer.dart';
+import 'package:orgeneral/widget/CommentsListView.dart';
 import 'package:orgeneral/widget/ProductsGridView.dart';
 
 class DealerPage extends StatefulWidget {
@@ -19,6 +22,7 @@ BuildContext _context;
 
 class _DealerPageState extends State<DealerPage> {
   List<Map<String, dynamic>> dapList = List<Map<String, dynamic>>();
+  List<Comment> comments = List();
 
   @override
   void initState() {
@@ -33,6 +37,11 @@ class _DealerPageState extends State<DealerPage> {
         setState(() {
           dapList.add({'dealer': widget.dealer, 'product': _product});
         });
+      });
+    });
+    await CommentService.getInDealer(dealerUid: widget.dealer.uid).then((_comments) {
+      setState(() {
+        comments = _comments;
       });
     });
   }
@@ -55,6 +64,7 @@ class _DealerPageState extends State<DealerPage> {
           buildDealerImage(),
           buildDealerDetails(),
           buildDealerProducts(dapList),
+          buildDealerComments(),
         ],
       ),
     );
@@ -88,7 +98,21 @@ class _DealerPageState extends State<DealerPage> {
     );
   }
 
+  Widget buildDealerComments() {
+    return Column(
+      children: <Widget>[
+        Text('yorumlar'),
+        CommentListView(comments: comments),
+      ],
+    );
+  }
+
   Widget buildDealerProducts(List<Map<String, dynamic>> dapList) {
-    return ProductsGridView(dapList);
+    return Column(
+      children: <Widget>[
+        Text('ürünler'),
+        ProductsGridView(dapList),
+      ],
+    );
   }
 }
