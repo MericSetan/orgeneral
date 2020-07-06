@@ -1,0 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:orgeneral/model/Dealer.dart';
+import 'package:orgeneral/model/Product.dart';
+
+class ProductService {
+  static ProductService _singleton = ProductService._internal();
+
+  factory ProductService() {
+    return _singleton;
+  }
+
+  ProductService._internal();
+
+  static final _db = Firestore.instance;
+
+  static Future<List<Product>> getAllProducts() async {
+    List<Product> _products;
+    await _db.collection('dealers').getDocuments().then((value) {
+      value.documents.forEach((snapshot) {
+        snapshot.reference.collection('products').getDocuments().then((value) {
+          _products = List.generate(
+              value.documents.length, (index) => Product.fromSnapshot(value.documents[index]));
+        });
+      });
+    });
+    // await _db.collection('products').getDocuments().then((value) {
+    //   _products = List<Product>();
+    //   value.documents.forEach((snapshot) {
+    //     _products.add(Product.fromSnapshot(snapshot));
+    //   });
+    // });
+    return _products;
+  }
+
+  static Future<List<Product>> getInDealer(String dealerUid) async {
+    List<Product> _products;
+    await _db
+        .collection('dealers')
+        .document(dealerUid)
+        .collection('products')
+        .getDocuments()
+        .then((value) {
+      _products = List.generate(
+          value.documents.length, (index) => Product.fromSnapshot(value.documents[index]));
+    });
+    return _products;
+  }
+
+  static Future<bool> add(String dealerUid, Product product) async {
+    bool _isCompleted = false;
+
+    var productRef = _db.collection('dealers').document(dealerUid);
+    // Map<String, dynamic> productMap = {'products': product.toMap()};
+
+    await productRef
+        .collection('products')
+        .add(product.toMap())
+        .whenComplete(() => _isCompleted = true);
+
+    return _isCompleted;
+  }
+}
