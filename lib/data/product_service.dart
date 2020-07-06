@@ -23,16 +23,10 @@ class ProductService {
         });
       });
     });
-    // await _db.collection('products').getDocuments().then((value) {
-    //   _products = List<Product>();
-    //   value.documents.forEach((snapshot) {
-    //     _products.add(Product.fromSnapshot(snapshot));
-    //   });
-    // });
     return _products;
   }
 
-  static Future<List<Product>> getInDealer(String dealerUid) async {
+  static Future<List<Product>> getInDealer({String dealerUid}) async {
     List<Product> _products;
     await _db
         .collection('dealers')
@@ -50,7 +44,6 @@ class ProductService {
     bool _isCompleted = false;
 
     var productRef = _db.collection('dealers').document(dealerUid);
-    // Map<String, dynamic> productMap = {'products': product.toMap()};
 
     await productRef
         .collection('products')

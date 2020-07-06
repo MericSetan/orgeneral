@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:orgeneral/data/dealer_service.dart';
 import 'package:orgeneral/data/product_service.dart';
-import 'package:orgeneral/model/Dealer.dart';
-import 'package:orgeneral/model/Product.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -24,47 +22,24 @@ class _HomeGridViewState extends State<HomeGridView> {
   List<Map<String, dynamic>> dapList = List(); // dap -> Dealer And Product
 
   @override
-  initState() {
-    // DealerService.add(
-    //   Dealer(
-    //       name: 'Sizin Çiftlik',
-    //       imageUrl:
-    //           'https://lh3.googleusercontent.com/proxy/bggqB694InvN51en9KwWQLWMEVE0tfqt9A48JHwpzeOkFlHAZbeSpZqR-pfb0P5bwb_uvVAiiPvYADrcOs_QREajzivKMzjF30G7Pm516EYHL3V6IscPbj7LgErdXWBh9v7uVQNqA7DsXw3dSRsOykH-6ydlhNfeiA'),
-    // ).then((value) => print('eklendi: $value'));
-
-    // ProductService.add(
-    //     'AXvFV6xY7Y94PeDbFyHy',
-    //     Product(
-    //       name: 'Ceviz',
-    //       imageUrl: 'https://www.fidanlik.com.tr/chandler-ceviz-fidani-cevz-fdani-339-10-O.png',
-    //       price: 30,
-    //     )).then((value) => print('eklendi $value'));
-
-    // DealerService.getAllDealers().then((_dealers) {
-    //   setState(() {
-    //     _dealers.forEach((_dealer) {
-    //       _dealer.products.forEach((_product) {
-    //         Map<String, dynamic> dap = {'dealer': _dealer, 'product': _product};
-    //         dapList.add(dap);
-    //       });
-    //     });
-    //   });
-    // });
-
-    DealerService.getAllDealers().then((_dealers) {
+  void initState() {
+    setState(() {
       dapList.clear();
-      setState(() {
+      DealerService.getAllDealers().then((_dealers) {
         _dealers.forEach((_dealer) {
-          ProductService.getInDealer(_dealer.referance.documentID).then((_product) {
-            Map<String, dynamic> dap = {'dealer': _dealer, 'product': _product};
-            dapList.add(dap);
-          });
-        });
-      });
-    });
+          String _dealerUid = _dealer.referance.documentID;
+          ProductService.getInDealer(dealerUid: _dealerUid).then((_products) {
+            _products.forEach((_product) {
+              print({'dealer': _dealer.name, 'product': _product.name});
+              dapList.add({'dealer': _dealer, 'product': _product});
+            }); //product
+          }); //products
+        }); //dealer
+      }); //dealers
+    }); //setState
 
     super.initState();
-  }
+  } //initState
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +53,7 @@ class _HomeGridViewState extends State<HomeGridView> {
 }
 
 Widget gridItem(Map<String, dynamic> dap) {
-  if (dap != null) {
+  if (dap != null && dap.isNotEmpty) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
