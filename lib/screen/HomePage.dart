@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:orgeneral/data/dealer_service.dart';
 import 'package:orgeneral/data/product_service.dart';
+import 'package:orgeneral/screen/ProductPage.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -18,31 +19,39 @@ class HomeGridView extends StatefulWidget {
   _HomeGridViewState createState() => _HomeGridViewState();
 }
 
+BuildContext _context;
+
 class _HomeGridViewState extends State<HomeGridView> {
   List<Map<String, dynamic>> dapList = List(); // dap -> Dealer And Product
 
   @override
   void initState() {
-    setState(() {
-      dapList.clear();
-      DealerService.getAllDealers().then((_dealers) {
-        _dealers.forEach((_dealer) {
-          String _dealerUid = _dealer.referance.documentID;
-          ProductService.getInDealer(dealerUid: _dealerUid).then((_products) {
-            _products.forEach((_product) {
-              print({'dealer': _dealer.name, 'product': _product.name});
-              dapList.add({'dealer': _dealer, 'product': _product});
-            }); //product
-          }); //products
-        }); //dealer
-      }); //dealers
-    }); //setState
-
     super.initState();
+    asyncInitState();
   } //initState
+
+  Future<void> asyncInitState() async {
+    await DealerService.getAllDealers().then((_dealers) {
+      dapList.clear();
+      // setState(() {
+      _dealers.forEach((_dealer) async {
+        String _dealerUid = _dealer.referance.documentID;
+        await ProductService.getInDealer(dealerUid: _dealerUid).then((_products) async {
+          _products.forEach((_product) {
+            setState(() {
+              dapList.add({'dealer': _dealer, 'product': _product});
+            });
+            print('product: ${_product.name}');
+          }); //product
+        }); //products
+      }); //dealer
+      // }); //setState
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
     return GridView.count(
       padding: EdgeInsets.all(4.0),
       crossAxisCount: 2,
@@ -64,6 +73,14 @@ Widget gridItem(Map<String, dynamic> dap) {
       child: RawMaterialButton(
         onPressed: () {
           print('uid: ${dap['product'].uid}');
+          Navigator.push(
+              _context,
+              MaterialPageRoute(
+                builder: (context) => ProductPage(
+                  dealerUid: dap['dealer'].uid,
+                  productUid: dap['product'].uid,
+                ),
+              ));
         },
         child: Container(
           padding: EdgeInsets.all(8.0),

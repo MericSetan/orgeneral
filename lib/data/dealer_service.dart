@@ -14,10 +14,10 @@ class DealerService {
 
   static Future<List<Dealer>> getAllDealers() async {
     var _dealers;
-    await _db.collection('dealers').getDocuments().then((value) {
+    await _db.collection('dealers').getDocuments().then((value) async {
       _dealers = List<Dealer>();
-      value.documents.forEach((snapshot) {
-        _dealers.add(Dealer.fromSnapshot(snapshot));
+      value.documents.forEach((snapshot) async {
+        await _dealers.add(Dealer.fromSnapshot(snapshot));
       });
     });
     return _dealers;
