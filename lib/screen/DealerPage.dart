@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:orgeneral/data/product_service.dart';
 import 'package:orgeneral/model/Dealer.dart';
-import 'package:orgeneral/model/Product.dart';
 import 'package:orgeneral/widget/ProductsGridView.dart';
 
 class DealerPage extends StatefulWidget {

@@ -5,7 +5,10 @@ import 'package:orgeneral/screen/ProductPage.dart';
 class ProductsGridView extends StatelessWidget {
   final List<Map<String, dynamic>> dapList; // dap -> Dealer And Product
 
-  ProductsGridView(this.dapList) : assert(dapList != null);
+
+  ProductsGridView(this.dapList) : assert(dapList != null){
+    this.dapList.sort((a,b)=>a['product'].uid.compareTo(b['product'].uid));
+  }
   var _context;
 
   @override
@@ -36,7 +39,7 @@ class ProductsGridView extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.blue,
+          color: Colors.grey[350],
         ),
         height: 250.0,
         margin: EdgeInsets.all(8.0),
@@ -84,7 +87,7 @@ class ProductsGridView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(dap['product'].name),
-                            Text('adet ${dap['product'].price}₺'),
+                            Text('${dap['product'].unit} ${dap['product'].price}₺'),
                           ],
                         ),
                         Row(

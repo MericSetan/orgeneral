@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:orgeneral/data/comment_service.dart';
 import 'package:orgeneral/data/dealer_service.dart';
 import 'package:orgeneral/data/product_service.dart';
 import 'package:orgeneral/model/Product.dart';
@@ -88,7 +89,7 @@ class _ProductPageState extends State<ProductPage> {
     return Column(
       children: <Widget>[
         Text(product.name),
-        Text(product.price.toString() + ' ₺'),
+        Text('${product.unit} ${product.price} ₺ '),
         RaisedButton(
             onPressed: () {
               Navigator.push(
