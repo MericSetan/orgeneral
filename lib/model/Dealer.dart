@@ -13,12 +13,16 @@ class Dealer {
     this.imageUrl,
   });
 
+  Dealer.empty()
+      : this.name = '',
+        this.imageUrl = '',
+        this._uid = '';
+
   Dealer.fromMap(Map<String, dynamic> map, {this.referance, uid})
       : assert(map['name'] != null),
         name = map['name'],
         assert(map['imageUrl'] != null),
         imageUrl = map['imageUrl'],
-
         _uid = uid;
 
   Dealer.fromSnapshot(DocumentSnapshot snapshot)

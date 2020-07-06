@@ -23,6 +23,14 @@ class DealerService {
     return _dealers;
   }
 
+  static Future<Dealer> getWithUid(String dealerUid) async {
+    var _dealer;
+    await _db.collection('dealers').document(dealerUid).get().then((snapshot) {
+      _dealer = Dealer.fromSnapshot(snapshot);
+    });
+    return _dealer;
+  }
+
   static Future<bool> add(Dealer dealer) async {
     bool _isCompleted = false;
     await _db.collection('dealers').add(dealer.toMap()).whenComplete(() => _isCompleted = true);

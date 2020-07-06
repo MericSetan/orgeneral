@@ -15,6 +15,11 @@ class Product {
     this.price,
   });
 
+  Product.empty()
+      : this.name = '',
+        this.imageUrl = '',
+        this.price = 0;
+
   Product.fromMap(Map<String, dynamic> map, {this.referance, uid})
       : assert(map['name'] != null),
         name = map['name'],

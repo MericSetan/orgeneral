@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:orgeneral/model/Dealer.dart';
 import 'package:orgeneral/model/Product.dart';
 
 class ProductService {
@@ -38,6 +37,18 @@ class ProductService {
           value.documents.length, (index) => Product.fromSnapshot(value.documents[index]));
     });
     return _products;
+  }
+
+  static Future<Product> getWithUid(String dealerUid, String productUid) async {
+    var _product;
+    await _db
+        .collection('dealers')
+        .document(dealerUid)
+        .collection('products')
+        .document(productUid)
+        .get()
+        .then((snapshot) => _product = Product.fromSnapshot(snapshot));
+    return _product;
   }
 
   static Future<bool> add(String dealerUid, Product product) async {
