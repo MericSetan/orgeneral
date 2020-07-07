@@ -3,7 +3,6 @@ import 'package:orgeneral/model/Dealer.dart';
 import 'package:orgeneral/model/Product.dart';
 import 'package:orgeneral/services/db.dart';
 import 'package:provider/provider.dart';
-// import 'package:orgeneral/screen/HomePage.dart';
 
 void main() {
   runApp(MyApp());
