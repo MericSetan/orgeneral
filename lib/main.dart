@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:orgeneral/model/Dealer.dart';
+import 'package:orgeneral/ExamplePage.dart';
 import 'package:orgeneral/model/Product.dart';
-import 'package:orgeneral/model/Comment.dart';
 import 'package:orgeneral/services/db.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Example(),
+      home: ExamplePage(),
     );
   }
 }
