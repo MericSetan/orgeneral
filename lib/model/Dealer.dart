@@ -8,25 +8,24 @@ class Dealer {
   String imageUrl;
   DocumentReference referance;
 
-  Dealer({
-    this.name,
-    this.imageUrl,
-  });
+  Dealer({uid, this.name, this.imageUrl}) : this._uid = uid;
 
-  Dealer.empty()
-      : this.name = '',
-        this.imageUrl = '',
-        this._uid = '';
+  factory Dealer.fromMap(Map data) {
+    data = data ?? {};
+    return Dealer(
+      name: data['name'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+    );
+  }
 
-  Dealer.fromMap(Map<String, dynamic> map, {this.referance, uid})
-      : assert(map['name'] != null),
-        name = map['name'],
-        assert(map['imageUrl'] != null),
-        imageUrl = map['imageUrl'],
-        _uid = uid;
-
-  Dealer.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, referance: snapshot.reference, uid: snapshot.documentID);
+  factory Dealer.fromSnapshot(DocumentSnapshot snapshot){
+    var data = snapshot.data;
+    return Dealer(
+      uid: snapshot.documentID ?? '',
+      name: data['name'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

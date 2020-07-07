@@ -42,8 +42,8 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  Dealer dealer = Dealer.empty();
-  Product product = Product.empty();
+  Dealer dealer = Dealer();
+  Product product = Product();
 
   List<Comment> comments = List();
 

@@ -1,8 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:orgeneral/data/product_service.dart';
+import 'package:orgeneral/model/Dealer.dart';
 import 'package:orgeneral/model/Product.dart';
-import 'package:orgeneral/screen/HomePage.dart';
+import 'package:orgeneral/services/db.dart';
+import 'package:provider/provider.dart';
+// import 'package:orgeneral/screen/HomePage.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,32 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: Example(),
+    );
+  }
+}
+
+class Example extends StatelessWidget {
+  final db = DatabaseService();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: StreamProvider<List<Dealer>>.value(
+        value: db.streamDealers(),
+        child: ProductsList(),
+      ),
+    );
+  }
+}
+
+class ProductsList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // var products = Provider.of<List<Product>>(context);
+    var dealers = Provider.of<List<Dealer>>(context);
+    return Column(
+      children: List.generate(dealers.length, (index) => Text('${dealers[index].name}')),
     );
   }
 }

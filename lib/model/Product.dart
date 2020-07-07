@@ -10,32 +10,28 @@ class Product {
   String unit;
   DocumentReference referance;
 
-  Product({
-    this.name,
-    this.imageUrl,
-    this.price,
-    this.unit,
-  });
+  Product({uid, this.name, this.imageUrl, this.price, this.unit}) : this._uid = uid;
 
-  Product.empty()
-      : this.name = '',
-        this.imageUrl = '',
-        this.price = 0,
-        this.unit = '';
+  factory Product.fromMap(Map data) {
+    data = data ?? {};
+    return Product(
+      name: data['name'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      price: data['price'].toDouble() ?? 0,
+      unit: data['unit'] ?? '',
+    );
+  }
 
-  Product.fromMap(Map<String, dynamic> map, {this.referance, uid})
-      : assert(map['name'] != null),
-        name = map['name'],
-        assert(map['imageUrl'] != null),
-        imageUrl = map['imageUrl'],
-        assert(map['price'] != null),
-        price = map['price'].toDouble(),
-        assert(map['unit'] != null),
-        unit = map['unit'],
-        _uid = uid;
-
-  Product.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, referance: snapshot.reference, uid: snapshot.documentID);
+  factory Product.fromSnapshot(DocumentSnapshot snapshot) {
+    var data = snapshot.data;
+    return Product(
+      uid: snapshot.documentID,
+      name: data['name'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      price: data['price'].toDouble() ?? 0,
+      unit: data['unit'] ?? '',
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
