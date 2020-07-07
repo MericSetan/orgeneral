@@ -40,12 +40,14 @@ class DatabaseService {
         list.documents.map((snapshot) => Dealer.fromSnapshot(snapshot)).toList());
   }
 
+  //get comments in dealer
   Stream<List<Comment>> streamDealerComments(String dealerId) {
     var ref = _db.collection('dealers').document(dealerId).collection('comments');
     return ref.snapshots().map((list) => 
         list.documents.map((snapshot) => Comment.fromSnapshot(snapshot)).toList());
   }
 
+  //get comments in product
   Stream<List<Comment>> streamProductComments(String dealerId, String productId) {
     var ref = _db
     .collection('dealers')

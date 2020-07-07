@@ -29,10 +29,31 @@ class Example extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var dealerId = 'QFvm25W7Zrtj25Tj3DR2';
     return Container(
-      child: StreamProvider<List<Comment>>.value(
-        value: db.streamProductComments('AXvFV6xY7Y94PeDbFyHy', 'tof9O7PGJYTcZFcc4XYT'),
-        child: ProductsList(),
+      child: StreamProvider<List<Product>>.value(
+        value: db.streamProducts(dealerId),
+        child: StreamBuilder<List<Product>>(
+          stream: db.streamProducts(dealerId),
+          builder: (context, snapshot) {
+            if (!snapshot.hasError) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Text('Offline!');
+                case ConnectionState.waiting:
+                  return Text('loading...');
+                case ConnectionState.done:
+                  return Text('okey gibi');
+                case ConnectionState.active:
+                  return ProductsList();
+                default:
+                  return Text('standart');
+              }
+            } else {
+              return Text('Error');
+            }
+          },
+        ),
       ),
     );
   }
@@ -42,9 +63,16 @@ class ProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // var products = Provider.of<List<Product>>(context);
-    var dealers = Provider.of<List<Comment>>(context);
-    return Column(
-      children: List.generate(dealers.length, (index) => Text('${dealers[index].content}')),
-    );
+    var products = Provider.of<List<Product>>(context);
+    Widget resultWidget;
+    if (products != null && products.isNotEmpty) {
+      resultWidget = Column(
+        children: List.generate(products.length, (index) => Text('${products[index].name}')),
+      );
+    }else{
+      resultWidget = Text('Ürün Yok');
+    }
+
+    return resultWidget;
   }
 }
