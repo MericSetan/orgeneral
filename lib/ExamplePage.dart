@@ -37,6 +37,7 @@ getDealer(String dealerId) {
     print('${event.uid}: ${event.toMap()}');
   });
 }
+// hahahaa deneme 1
 
 getProducts(String dealerId) {
   var productsStream = db.streamProducts(dealerId);
