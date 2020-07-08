@@ -68,7 +68,7 @@ class ProductsList extends StatelessWidget {
       resultWidget = Column(
         children: List.generate(products.length, (index) => Text('${products[index].name}')),
       );
-    }else{
+    }else {
       resultWidget = Text('Ürün Yok');
     }
 
